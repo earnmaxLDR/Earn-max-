@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EarnMax - User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background: #f3f4f6; }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease-in; }
+        .nav-active { color: #2563eb !important; }
+        .blur-content { filter: blur(5px); pointer-events: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="pb-24">
+    <nav class="bg-white border-b sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-sm">
+        <div class="text-2xl font-black text-blue-600 italic tracking-tighter">EARNMAX</div>
+        <div id="status-badge" class="text-[10px] font-bold px-3 py-1 rounded-full border tracking-tighter uppercase italic">Checking...</div>
+    </nav>
+
+    <div class="max-w-md mx-auto p-4 space-y-6">
+        <div id="home" class="view-section active space-y-6">
+            <div id="activation-card" class="bg-white p-6 rounded-[30px] shadow-xl border-2 border-dashed border-blue-400 space-y-4">
+                <h3 class="font-black text-blue-600 uppercase italic tracking-tight">অ্যাকাউন্ট একটিভ করুন (৳১০০)</h3>
+                <div class="bg-blue-50 p-4 rounded-2xl text-xs space-y-2 border border-blue-100">
+                    <p class="font-bold text-gray-700 leading-tight">বিকাশ/নগদ (Personal): <span class="text-indigo-600 text-lg block font-black">017XXXXXXXX</span></p>
+                    <p>১০০ টাকা পাঠিয়ে TrxID নিচে সাবমিট করুন।</p>
+                </div>
+                <input type="text" id="trxInput" placeholder="Transaction ID (TrxID)" class="w-full bg-gray-50 border p-4 rounded-2xl font-bold uppercase outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="submitAct()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl shadow-xl hover:bg-blue-700 transition active:scale-95 uppercase">সাবমিট করুন</button>
+            </div>
+
+            <div id="stats-area" class="blur-content space-y-6">
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[35px] p-8 text-white shadow-xl relative overflow-hidden">
+                    <p class="text-[10px] opacity-70 uppercase font-bold tracking-widest leading-none">Your Balance</p>
+                    <h1 id="userBal" class="text-4xl font-black mt-2">৳ ০.০০</h1>
+                    <button onclick="changeView('withdraw')" class="mt-6 bg-white text-blue-600 px-6 py-2 rounded-xl font-black text-xs uppercase shadow-lg active:scale-95 transition">উত্তোলন</button>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[9px] text-gray-400 font-bold uppercase">Lvl 1</p><p class="text-lg font-black text-blue-600">৳৩০</p></div>
+                    <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[9px] text-gray-400 font-bold uppercase">Lvl 2</p><p class="text-lg font-black text-indigo-500">৳১৫</p></div>
+                    <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[9px] text-gray-400 font-bold uppercase">Lvl 3</p><p class="text-lg font-black text-purple-500">৳৫</p></div>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm">
+                    <p class="text-sm font-bold text-gray-700 mb-2 tracking-tight">আপনার রেফারেল লিংক</p>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-dashed text-xs text-blue-600 font-bold break-all" id="refLink">এক্টিভ করার পর পাবেন</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="withdraw" class="view-section space-y-6">
+            <h2 class="text-2xl font-black text-gray-800 italic">টাকা উত্তোলন 💳</h2>
+            <div class="bg-white p-6 rounded-[30px] shadow-xl border border-gray-100 space-y-5">
+                <select id="wMethod" class="w-full bg-gray-50 border p-4 rounded-2xl font-bold"><option>bKash Personal</option><option>Nagad Personal</option></select>
+                <input type="number" id="wPhone" placeholder="আপনার নাম্বার" class="w-full bg-gray-50 border p-4 rounded-2xl font-bold">
+                <select id="wAmount" class="w-full bg-gray-50 border p-4 rounded-2xl font-bold text-blue-600">
+                 
